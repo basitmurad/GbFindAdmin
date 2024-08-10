@@ -1,6 +1,8 @@
 package com.example.gbfindadmin.vendorMode;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,5 +18,10 @@ public class DashboardActivity extends AppCompatActivity {
 
         binding = ActivityDashboardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+    }
+
+    public void NavigateToAddItem(View view) {
+
+        startActivity(new Intent(DashboardActivity.this ,AddItemActivity.class));
     }
 }
