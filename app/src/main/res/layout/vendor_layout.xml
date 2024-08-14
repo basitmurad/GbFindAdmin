@@ -6,7 +6,7 @@
     app:cardCornerRadius="16dp"
     android:layout_margin="6dp"
     android:padding="4dp"
-    android:backgroundTint="@color/black"
+    android:backgroundTint="#EBE7E7"
     app:cardElevation="16dp">
 
 
@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="vendor_shopName"
+                android:id="@+id/vendorShopName"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:padding="6dp"
