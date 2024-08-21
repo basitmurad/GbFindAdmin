@@ -8,10 +8,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gbfindadmin.databinding.ActivityLoginBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
-
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +25,7 @@ setContentView(binding
             @Override
             public void onClick(View v) {
                 // Handle login logic here
-                String username = binding.etUsername.getText().toString().trim();
+                String username = binding.etUseremail.getText().toString().trim();
                 String password = binding.etPassword.getText().toString().trim();
 
                 if (username.isEmpty() || password.isEmpty()) {

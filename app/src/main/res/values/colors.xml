@@ -1,5 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Neutral Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_light">#F5F5F5</color>
+    <color name="gray_dark">#333333</color>
+
+    <!-- Primary Colors -->
+    <color name="primary">#6200EE</color> <!-- Purple -->
+    <color name="primary_dark">#3700B3</color> <!-- Darker Purple -->
+    <color name="primary_light">#BB86FC</color> <!-- Light Purple -->
+
+    <!-- Accent Colors -->
+    <color name="accent">#03DAC6</color> <!-- Teal -->
+    <color name="accent_dark">#018786</color> <!-- Darker Teal -->
+    <color name="accent_light">#66FFF9</color> <!-- Light Teal -->
+
+    <!-- Error Color -->
+    <color name="error">#B00020</color> <!-- Red -->
 </resources>
