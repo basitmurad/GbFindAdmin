@@ -1,0 +1,65 @@
+<!-- user_item.xml -->
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    android:elevation="16dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#9E68EA"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/ownerNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="Owner Name" />
+
+        <TextView
+            android:id="@+id/ownerShopNameTextView"
+            android:layout_width="match_parent"
+            android:textAlignment="textEnd"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+
+            android:text="Shop Name" />
+
+        <TextView
+            android:id="@+id/emailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+
+            android:text="Email" />
+
+        <TextView
+            android:id="@+id/shopAddressTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+
+            android:text="Shop Address" />
+
+        <TextView
+            android:id="@+id/ownerContactTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+
+            android:text="Owner Contact" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
