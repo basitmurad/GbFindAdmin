@@ -25,7 +25,7 @@
                 android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image"
+                android:src="@drawable/holders"
                 android:layout_marginBottom="16dp" />
 
             <!-- Item Name -->

@@ -39,114 +39,87 @@ public class AddItemActivity extends AppCompatActivity {
     private Uri imageUri;
     private FirebaseDatabase database;
     private DatabaseReference itemsRef;
+    private DatabaseReference allItemsRef; // Reference for all items
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
-    private DatabaseReference userDetailRef;
-    String adminFcm, email ,ownerContact ,ownerName ,ownerShopName ,shopAddress;
-    String userId;
-
     private ProgressDialog progressDialog;
+    private String ownerName, ownerShopName, userId;
+
+    private  DatabaseReference userData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityAddItemBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
 
+        String userId = FirebaseAuth.getInstance().getUid();
+        userData = FirebaseDatabase.getInstance().getReference("VendorsDetail");
         ownerName = getIntent().getStringExtra("ownerName");
-        Log.d("name" ,ownerName);
         ownerShopName = getIntent().getStringExtra("ownerShopName");
-        Log.d("name" ,ownerShopName);
         userId = FirebaseAuth.getInstance().getUid();
 
-        // Fetch the user details
-
-        storageRef = FirebaseStorage.getInstance().getReference("images");
         firebaseStorage = FirebaseStorage.getInstance();
-
+        storageRef = firebaseStorage.getReference("images");
         database = FirebaseDatabase.getInstance();
         itemsRef = database.getReference("vendors");
+        allItemsRef = database.getReference("allItems"); // Initialize the reference for all items
 
         progressDialog = new ProgressDialog(AddItemActivity.this);
         progressDialog.setMessage("Please wait\nAdding your item to store");
         progressDialog.setCancelable(false);
         progressDialog.dismiss();
 
-        binding.itemImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
+        binding.itemImage.setOnClickListener(v -> selectImage());
+
+        binding.saveButton.setOnClickListener(v -> {
+            // Check if the image is selected
+            if (imageUri == null) {
+                Toast.makeText(AddItemActivity.this, "Image is not selected", Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
 
-        binding.saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            // Check if the item name is empty
+            if (binding.itemName.getText().toString().trim().isEmpty()) {
+                Toast.makeText(AddItemActivity.this, "Item name is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                // Check if the image is selected
-                if (imageUri == null) {
-                    Toast.makeText(AddItemActivity.this, "Image is not selected", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            // Check if the item price is empty
+            if (binding.itemPrice.getText().toString().trim().isEmpty()) {
+                Toast.makeText(AddItemActivity.this, "Price is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                // Check if the item name is empty
-                if (binding.itemName.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(AddItemActivity.this, "Item name is required", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            // Check if a category is selected
+            if (binding.categoryGroup.getCheckedRadioButtonId() == -1) {
+                Toast.makeText(AddItemActivity.this, "Please select a category", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                // Check if the item price is empty
-                if (binding.itemPrice.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(AddItemActivity.this, "Price is required", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            progressDialog.show();
 
-                // Check if a category is selected
-                if (binding.categoryGroup.getCheckedRadioButtonId() == -1) {
-                    Toast.makeText(AddItemActivity.this, "Please select a category", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            // If all validations pass, proceed with uploading the image
+            final StorageReference reference = firebaseStorage.getReference()
+                    .child("eulogyPictures")
+                    .child(System.currentTimeMillis() + "_" + imageUri.getLastPathSegment());
 
-                progressDialog.show();
-
-                // If all validations pass, proceed with uploading the image
-                final StorageReference reference = firebaseStorage.getReference()
-                        .child("eulogyPictures")
-                        .child(System.currentTimeMillis() + "_" + imageUri.getLastPathSegment());
-
-                reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                // Check if the image was successfully uploaded and then call uploadImage
-                                if (imageUri != null) {
-                                    uploadImage(imageUri.toString());
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(AddItemActivity.this, "Failed to get image URL", Toast.LENGTH_LONG).show();
-                            }
-                        });
+            reference.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                reference.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Proceed to upload product data
+                    if (imageUri != null) {
+                        uploadProductData(uri.toString());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Toast.makeText(AddItemActivity.this, "Image upload failed", Toast.LENGTH_LONG).show();
-                    }
+                }).addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(AddItemActivity.this, "Failed to get image URL", Toast.LENGTH_LONG).show();
                 });
-            }
+            }).addOnFailureListener(e -> {
+                progressDialog.dismiss();
+                Toast.makeText(AddItemActivity.this, "Image upload failed", Toast.LENGTH_LONG).show();
+            });
         });
-
-
     }
-
 
     private void selectImage() {
         // Open gallery to pick an image
@@ -163,62 +136,45 @@ public class AddItemActivity extends AppCompatActivity {
             binding.itemImage.setImageURI(imageUri);
         }
     }
-    private void uploadImage(String imageUri) {
+
+    private void uploadProductData(String imageUri) {
         if (imageUri == null) {
             Toast.makeText(AddItemActivity.this, "No image selected", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Log the URI and storage reference path
-        Log.d("UploadDebug", "Image URI: " + imageUri);
-        StorageReference fileReference = storageRef.child(System.currentTimeMillis() + ".jpg");
-        Log.d("UploadDebug", "Uploading file to: " + fileReference.getPath());
-
         String id = UUID.randomUUID().toString();
-        // Upload the image to Firebase Storage
-        UploadTask uploadTask = fileReference.putFile(Uri.parse(imageUri));
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            // Get the download URL for the uploaded image
-            fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                String downloadUrl = uri.toString();
-                Log.d("UploadDebug", "Image uploaded successfully. URL: " + downloadUrl);
+        ProductClass product = new ProductClass(
+                id,
+                binding.itemName.getText().toString().trim(),
+                binding.itemPrice.getText().toString().trim(),
+                getSelectedCategory(),
+                imageUri
+        );
 
-                // After getting the download URL, upload the product details to Firebase Realtime Database
-//                String productId = itemsRef.push().getKey(); // Generate a unique key for each product
-                ProductClass product = new ProductClass(
-                        id,
-                        binding.itemName.getText().toString().trim(),
-                        binding.itemPrice.getText().toString().trim(),
-                        getSelectedCategory(),
-                        downloadUrl
-                );
+        String category = getSelectedCategory();
 
-                String cat = getSelectedCategory();
-
-                // Upload the product data
-                itemsRef.child(ownerShopName).child(cat).child(id).setValue(product)
-                        .addOnSuccessListener(aVoid -> {
-                            progressDialog.dismiss();
-                            finish();
-                            Toast.makeText(AddItemActivity.this, "Product uploaded successfully", Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e -> {
-                            progressDialog.dismiss();
-                            Log.e("UploadDebug", "Failed to upload product data: " + e.getMessage());
-                            Toast.makeText(AddItemActivity.this, "Failed to upload product data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
-
-            }).addOnFailureListener(e -> {
-
-                progressDialog.dismiss();
-                Log.e("UploadDebug", "Failed to get download URL: " + e.getMessage());
-                Toast.makeText(AddItemActivity.this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
-        }).addOnFailureListener(e -> {
-            progressDialog.dismiss();
-            Log.e("UploadDebug", "Upload failed: " + e.getMessage());
-            Toast.makeText(AddItemActivity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+        // Save to 'allItems' reference
+        allItemsRef.child(ownerShopName).child(id).setValue(product)
+                .addOnSuccessListener(aVoid -> {
+                    // After saving to 'allItems', save to the specific category
+                    itemsRef.child(ownerShopName).child(category).child(id).setValue(product)
+                            .addOnSuccessListener(aVoid1 -> {
+                                progressDialog.dismiss();
+                                finish();
+                                Toast.makeText(AddItemActivity.this, "Product uploaded successfully", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                progressDialog.dismiss();
+                                Log.e("UploadDebug", "Failed to upload product data to category: " + e.getMessage());
+                                Toast.makeText(AddItemActivity.this, "Failed to upload product data to category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Log.e("UploadDebug", "Failed to upload product data to allItems: " + e.getMessage());
+                    Toast.makeText(AddItemActivity.this, "Failed to upload product data to allItems: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private String getSelectedCategory() {
@@ -227,6 +183,40 @@ public class AddItemActivity extends AppCompatActivity {
         return selectedRadioButton.getText().toString();
     }
 
+    private void fetchUserData(String userId) {
+
+userData = database.getReference().child(userId);
+        userData.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                     ownerName = dataSnapshot.child("ownerName").getValue(String.class);
+                     ownerShopName = dataSnapshot.child("ownerShopName").getValue(String.class);
+                    String shopAddress = dataSnapshot.child("shopAddress").getValue(String.class);
+                    String ownerContact = dataSnapshot.child("ownerContact").getValue(String.class);
+
+                    // Handle the fetched details
+//                    if (ownerName != null && ownerShopName != null) {
+//                        // Use the fetched data as needed
+//                        Toast.makeText(AddItemActivity.this, "Welcome " + ownerName, Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(AddItemActivity.this, DashboardActivity.class);
+//                        intent.putExtra("ownerShopName", ownerShopName);
+//                        intent.putExtra("ownerName", ownerName);
+//                        startActivity(intent);
+//                    } else {
+//                        Toast.makeText(AddItemActivity.this, "User details are incomplete", Toast.LENGTH_SHORT).show();
+//                    }
+                } else {
+                    startActivity(new Intent(AddItemActivity.this, LoginActivity.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(AddItemActivity.this, "Failed to load user details: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 }

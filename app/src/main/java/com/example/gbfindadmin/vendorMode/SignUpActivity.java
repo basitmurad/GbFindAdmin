@@ -197,6 +197,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Objects;
+
 public class SignUpActivity extends AppCompatActivity {
 
     ActivitySignUpBinding binding;
@@ -204,7 +206,7 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
 
-    private String ownerEmail, ownerPassword, ownerName, ownerShopName, ownerShopLocation, ownerContactNumber ,adminFcmToken ;
+    private String ownerEmail, ownerPassword,  bankName, accountNumber, ownerName, ownerShopName, ownerShopLocation, ownerContactNumber ,adminFcmToken ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,7 +240,14 @@ public class SignUpActivity extends AppCompatActivity {
             binding.etContactNumber.setError("Contact number is empty");
         } else if (binding.etVendorLocation.getText().toString().isEmpty()) {
             binding.etVendorLocation.setError("Location is empty");
-        } else {
+        }
+        else if (binding.etVendorBank.getText().toString().isEmpty()) {
+            binding.etVendorBank.setError("Bank is empty");
+        }
+        else if (binding.etVendorAccountNumber.getText().toString().isEmpty()) {
+            binding.etVendorAccountNumber.setError("Account number is empty");
+        }
+        else {
             progressDialog.setTitle("Please wait...");
             progressDialog.setMessage("Creating account");
             progressDialog.setCancelable(false);
@@ -250,6 +259,8 @@ public class SignUpActivity extends AppCompatActivity {
             ownerShopName = binding.etShopName.getText().toString();
             ownerContactNumber = binding.etContactNumber.getText().toString();
             ownerShopLocation = binding.etVendorLocation.getText().toString();
+            bankName = binding.etVendorBank.getText().toString();
+            accountNumber = binding.etVendorAccountNumber.getText().toString();
 
             createAccountWithEmailAndPassword(ownerEmail, ownerPassword);
         }
@@ -262,7 +273,7 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressDialog.dismiss();
-                            String userUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            String userUId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
                             SendDataToFireBase(userUId);
                             Toast.makeText(SignUpActivity.this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
                         } else {
@@ -276,7 +287,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void SendDataToFireBase(String userUId) {
 
 UserClass userClass = new UserClass(ownerEmail ,ownerName ,ownerShopName,ownerPassword, ownerShopLocation ,ownerContactNumber ,adminFcmToken);
-        databaseReference.child("UserDetail").child(userUId).setValue(userClass)
+        databaseReference.child("VendorsDetail").child(userUId).setValue(userClass)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {

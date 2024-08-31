@@ -52,7 +52,7 @@ public class ClothsFragment extends Fragment {
 
 
         mAuth = FirebaseAuth.getInstance();
-        userDetailRef = FirebaseDatabase.getInstance().getReference("UserDetail");
+        userDetailRef = FirebaseDatabase.getInstance().getReference("VendorsDetail");
 
         recyclerView = view.findViewById(R.id.vendorRecycler22222);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

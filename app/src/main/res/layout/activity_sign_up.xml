@@ -13,9 +13,9 @@
        android:layout_height="match_parent"
 
        >
-       <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       <LinearLayout
            android:layout_width="match_parent"
-           android:layout_height="match_parent"
+           android:layout_height="wrap_content"
            android:orientation="vertical"
            android:padding="16dp"
            android:gravity="center"
@@ -23,7 +23,7 @@
 
            <ImageView
                android:layout_width="match_parent"
-               android:layout_height="200dp"
+               android:layout_height="150dp"
                android:scaleType="fitXY"
 
                android:src="@drawable/login"
@@ -38,7 +38,8 @@
                android:textColor="#000000"
                android:textStyle="bold"
                android:layout_gravity="center_horizontal"
-               android:paddingBottom="24dp"/>
+               android:paddingBottom="24dp"
+               tools:ignore="HardcodedText" />
 
            <!-- User Name Input -->
            <EditText
@@ -47,6 +48,7 @@
                android:layout_height="wrap_content"
                android:hint="Email"
                android:inputType="text"
+               tools:ignore="HardcodedText,TextFields"
                android:padding="12dp"
                android:background="@drawable/edit_text_background"
                android:layout_marginBottom="16dp"/>
@@ -55,15 +57,24 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:hint="Password"
+
                android:inputType="text"
                android:padding="12dp"
                android:background="@drawable/edit_text_background"
-               android:layout_marginBottom="16dp"/>
+               android:layout_marginBottom="16dp"
+               tools:ignore="HardcodedText,TextFields" />
+
+
+           <!-- Shop Name Input -->
+
+
+
            <EditText
                android:id="@+id/etOwnerName"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:hint="Owner Name"
+               tools:ignore="HardcodedText,TextFields"
                android:inputType="text"
                android:padding="12dp"
                android:background="@drawable/edit_text_background"
@@ -76,6 +87,7 @@
                android:layout_height="wrap_content"
                android:hint="Shop Name"
                android:inputType="text"
+               tools:ignore="HardcodedText,TextFields"
                android:padding="12dp"
                android:background="@drawable/edit_text_background"
                android:layout_marginBottom="16dp"/>
@@ -86,6 +98,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:hint="Contact Number"
+               tools:ignore="HardcodedText,TextFields"
                android:inputType="phone"
                android:padding="12dp"
                android:background="@drawable/edit_text_background"
@@ -94,18 +107,42 @@
                android:id="@+id/et_vendor_location"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:hint="Shop location"
-               android:inputType="phone"
+               android:hint="@string/shop_location"
+               android:importantForAutofill="no"
+               tools:ignore="HardcodedText,TextFields"
                android:padding="12dp"
                android:background="@drawable/edit_text_background"
                android:layout_marginBottom="24dp"/>
 
-           <!-- Sign Up Button -->
+
+           <EditText
+               android:id="@+id/et_vendor_bank"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:hint="Bank Name"
+               android:importantForAutofill="no"
+               tools:ignore="HardcodedText,TextFields"
+               android:padding="12dp"
+               android:background="@drawable/edit_text_background"
+               android:layout_marginBottom="24dp"/>
+
+           <EditText
+               android:id="@+id/et_vendorAccountNumber"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:hint="Account Number"
+               android:importantForAutofill="no"
+               tools:ignore="HardcodedText,TextFields"
+               android:padding="12dp"
+               android:background="@drawable/edit_text_background"
+               android:layout_marginBottom="24dp"/>
+
+
            <androidx.appcompat.widget.AppCompatButton
                android:id="@+id/btn_sign_up"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:text="Sign Up"
+               android:text="@string/sign_up"
                android:textColor="#FFFFFF"
                android:background="@drawable/edit_text_background"
                android:backgroundTint="@color/black"

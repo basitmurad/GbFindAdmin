@@ -53,7 +53,7 @@ public class DashboardActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         mAuth = FirebaseAuth.getInstance();
-        userDetailRef = FirebaseDatabase.getInstance().getReference("UserDetail"); // Adjust path as needed
+        userDetailRef = FirebaseDatabase.getInstance().getReference("VendorsDetail"); // Adjust path as needed
 
         navIcon = findViewById(R.id.nav_icon);
 
@@ -200,4 +200,10 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    private void checkUserStatus() {
+
+    }
+
 }
