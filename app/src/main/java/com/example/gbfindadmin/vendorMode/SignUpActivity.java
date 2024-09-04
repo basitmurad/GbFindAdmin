@@ -286,7 +286,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void SendDataToFireBase(String userUId) {
 
-UserClass userClass = new UserClass(ownerEmail ,ownerName ,ownerShopName,ownerPassword, ownerShopLocation ,ownerContactNumber ,adminFcmToken);
+        UserClass userClass = new UserClass(ownerEmail ,ownerName
+         ,ownerShopName ,ownerPassword ,userUId ,ownerShopLocation ,ownerContactNumber ,adminFcmToken ,bankName,accountNumber);
+
+//UserClass userClass = new UserClass(ownerEmail ,ownerName ,ownerShopName,ownerPassword,ownerPassword,
+//        ownerShopLocation ,ownerContactNumber ,adminFcmToken);
         databaseReference.child("VendorsDetail").child(userUId).setValue(userClass)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
