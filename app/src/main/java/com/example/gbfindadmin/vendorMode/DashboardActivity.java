@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -19,7 +18,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.gbfindadmin.MainActivity;
 import com.example.gbfindadmin.R;
-import com.example.gbfindadmin.adminMode.AdminLoginActivity;
 import com.example.gbfindadmin.databinding.ActivityDashboardBinding;
 import com.example.gbfindadmin.vendorMode.fragments.MyFragmentStateAdapter;
 import com.google.android.material.navigation.NavigationView;
@@ -30,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -74,33 +74,33 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_home) {
-
-
-                    // Handle the home action
-                } else if (item.getItemId() == R.id.nav_admin) {
-
-                    Intent homeIntent = new Intent(DashboardActivity.this, AdminLoginActivity.class);
-
-                    updateUserRoleAndNavigate();
-                    startActivity(homeIntent);
-                    // Handle the settings action
-                } else {
-                    Intent homeIntent = new Intent(DashboardActivity.this, AdminLoginActivity.class);
-                    startActivity(homeIntent);
-                    finishAffinity();
-
-                    // Handle other menu items
-                }
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
-
-
-            }
-        });
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                if (item.getItemId() == R.id.nav_home) {
+//
+//
+//                    // Handle the home action
+//                } else if (item.getItemId() == R.id.nav_admin) {
+//
+//                    Intent homeIntent = new Intent(DashboardActivity.this, AdminLoginActivity.class);
+//
+//                    updateUserRoleAndNavigate();
+//                    startActivity(homeIntent);
+//                    // Handle the settings action
+//                } else {
+//                    Intent homeIntent = new Intent(DashboardActivity.this, AdminLoginActivity.class);
+//                    startActivity(homeIntent);
+//                    finishAffinity();
+//
+//                    // Handle other menu items
+//                }
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//                return true;
+//
+//
+//            }
+//        });
         checkUserAndFetchData();
 
         MyFragmentStateAdapter adapter = new MyFragmentStateAdapter(getSupportFragmentManager(), getLifecycle());
@@ -145,7 +145,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void checkUserAndFetchData() {
-        String currentUserId = mAuth.getCurrentUser().getUid();
+        String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
         // Query the database for the specific user
         userDetailRef.child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {

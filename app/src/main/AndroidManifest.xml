@@ -21,6 +21,9 @@
         android:theme="@style/Theme.GbFindAdmin"
         tools:targetApi="31">
         <activity
+            android:name=".OrderShowActivity"
+            android:exported="false" />
+        <activity
             android:name=".vendorMode.CreateVendorActivity"
             android:exported="false" />
         <activity
@@ -31,12 +34,6 @@
             android:exported="false" />
         <activity
             android:name=".vendorMode.AddItemActivity"
-            android:exported="false" />
-        <activity
-            android:name=".adminMode.AdminDashboardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".adminMode.AdminLoginActivity"
             android:exported="false" />
         <activity
             android:name=".vendorMode.DashboardActivity"

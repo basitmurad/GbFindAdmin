@@ -8,6 +8,10 @@ android {
     namespace = "com.example.gbfindadmin"
     compileSdk = 34
 
+    packagingOptions{
+        exclude("META-INF/DEPENDENCIES")
+    }
+
     defaultConfig {
         applicationId = "com.example.gbfindadmin"
         minSdk = 24
@@ -69,6 +73,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-messaging-ktx:23.2.1")
 
     implementation ("com.squareup.picasso:picasso:2.71828")
+    implementation ("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
 
 }

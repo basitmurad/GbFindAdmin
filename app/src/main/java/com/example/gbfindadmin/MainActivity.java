@@ -1,16 +1,11 @@
 
 package com.example.gbfindadmin;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.gbfindadmin.adminMode.AdminLoginActivity;
 import com.example.gbfindadmin.databinding.ActivityMainBinding;
 import com.example.gbfindadmin.vendorMode.DashboardActivity;
 import com.example.gbfindadmin.vendorMode.LoginActivity;
