@@ -21,5 +21,7 @@ public class OrderShowActivity extends AppCompatActivity {
         binding = ActivityOrderShowBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+//        Hel[[z]]
     }
 }
