@@ -22,6 +22,5 @@ public class OrderShowActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-//        Hel[[z]]
     }
 }

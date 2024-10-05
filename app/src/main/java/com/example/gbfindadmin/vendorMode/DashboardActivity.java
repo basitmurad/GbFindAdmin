@@ -10,14 +10,11 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.gbfindadmin.MainActivity;
-import com.example.gbfindadmin.R;
 import com.example.gbfindadmin.databinding.ActivityDashboardBinding;
 import com.example.gbfindadmin.vendorMode.fragments.MyFragmentStateAdapter;
 import com.google.android.material.navigation.NavigationView;
@@ -54,54 +51,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         userDetailRef = FirebaseDatabase.getInstance().getReference("VendorsDetail"); // Adjust path as needed
-
-        navIcon = findViewById(R.id.nav_icon);
-
-
-
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.navigation_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        // Set up the icon click listener
-        navIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                if (item.getItemId() == R.id.nav_home) {
-//
-//
-//                    // Handle the home action
-//                } else if (item.getItemId() == R.id.nav_admin) {
-//
-//                    Intent homeIntent = new Intent(DashboardActivity.this, AdminLoginActivity.class);
-//
-//                    updateUserRoleAndNavigate();
-//                    startActivity(homeIntent);
-//                    // Handle the settings action
-//                } else {
-//                    Intent homeIntent = new Intent(DashboardActivity.this, AdminLoginActivity.class);
-//                    startActivity(homeIntent);
-//                    finishAffinity();
-//
-//                    // Handle other menu items
-//                }
-//                drawerLayout.closeDrawer(GravityCompat.START);
-//                return true;
-//
-//
-//            }
-//        });
         checkUserAndFetchData();
+
+
+
+
+
 
         MyFragmentStateAdapter adapter = new MyFragmentStateAdapter(getSupportFragmentManager(), getLifecycle());
         binding.viewPager.setAdapter(adapter);
@@ -180,7 +135,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
     private void updateUserRoleAndNavigate() {
-        String currentUserId = mAuth.getCurrentUser().getUid();
+        String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
         // Update user role in Firebase
         userDetailRef.child(currentUserId).child("role").setValue("admin").addOnCompleteListener(task -> {
@@ -202,8 +157,12 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
 
-    private void checkUserStatus() {
+    public void showOrder(View view) {
+        Intent intent = new Intent(DashboardActivity.this, OrderActivity.class);
 
+
+        intent.putExtra("ownerName", ownerName);
+        intent.putExtra("ownerShopName", ownerShopName);
+        startActivity(intent);
     }
-
 }
