@@ -1,5 +1,4 @@
-package com.example.gbfindadmin.vendorMode;
-
+package com.example.gbfindadmin;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,37 +8,33 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.gbfindadmin.Order;
-import com.example.gbfindadmin.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
+public class ProgressAdapter extends RecyclerView.Adapter<ProgressAdapter.OrderViewHolder> {
 
     private final ArrayList<Order> orders;
     private final String ownerShop;  // Add ownerShop variable
 
 
-    public OrderAdapter(ArrayList<Order> orders, String ownerShop) {
+    public ProgressAdapter(ArrayList<Order> orders, String ownerShop) {
         this.orders = orders;
         this.ownerShop = ownerShop;
     }
 
     @NonNull
     @Override
-    public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProgressAdapter.OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemlist, parent, false);
-        return new OrderViewHolder(view);
+        return new ProgressAdapter.OrderViewHolder(view);
     }
     @SuppressLint("RecyclerView")
     @Override
-    public void onBindViewHolder(@NonNull OrderViewHolder holder,  int position) {
+    public void onBindViewHolder(@NonNull ProgressAdapter.OrderViewHolder holder, int position) {
         Order order = orders.get(position);
         holder.accountName.setText("TransactionId: " + order.getAccountName());
         holder.address.setText("Address: " + order.getAddress());
@@ -72,7 +67,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Update the status to "Progress" locally
-                        order.setStatus("Progress");
+                        order.setStatus("Deliver");
 
                         // Update the status in Firebase
                         DatabaseReference orderRef = FirebaseDatabase.getInstance()
@@ -80,7 +75,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                                 .child(ownerShop) // Add ownerShop variable reference
                                 .child(order.getOrderId()); // Get the orderId
 
-                        orderRef.child("status").setValue("Progress")
+                        orderRef.child("status").setValue("Deliver")
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(v.getContext(), "Order status updated to 'Progress'", Toast.LENGTH_SHORT).show();
@@ -95,22 +90,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 });
 
 
-                // Positive button - Confirm delivery
-//                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // Update the status to "Progress"
-//                        order.setStatus("Progress");
-//
-//                        // Notify the adapter that the item has changed
-//                        notifyItemChanged(position);
-//
-//                        // Optionally, show a message
-//                        Toast.makeText(v.getContext(), "Order status changed to 'Progress'", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
-                // Negative button - Cancel the action
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

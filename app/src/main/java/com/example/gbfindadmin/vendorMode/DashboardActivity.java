@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.gbfindadmin.DeliverActivity;
 import com.example.gbfindadmin.MainActivity;
+import com.example.gbfindadmin.ProgressActivity;
 import com.example.gbfindadmin.databinding.ActivityDashboardBinding;
 import com.example.gbfindadmin.vendorMode.fragments.MyFragmentStateAdapter;
 import com.google.android.material.navigation.NavigationView;
@@ -89,15 +91,7 @@ public class DashboardActivity extends AppCompatActivity {
 
 
 
-    public void NavigateToAddItem(View view) {
-        Intent intent = new Intent(DashboardActivity.this, AddItemActivity.class);
 
-
-        intent.putExtra("ownerName", ownerName);
-        intent.putExtra("ownerShopName", ownerShopName);
-        startActivity(intent);
-
-    }
 
     private void checkUserAndFetchData() {
         String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
@@ -134,28 +128,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
     }
-    private void updateUserRoleAndNavigate() {
-        String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-
-        // Update user role in Firebase
-        userDetailRef.child(currentUserId).child("role").setValue("admin").addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Save role in SharedPreferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(KEY_USER_ROLE, "admin");
-                editor.apply();
-
-                // Navigate to AdminLoginActivity
-                Intent intent = new Intent(DashboardActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish(); // Optional: Close the current activity
-            } else {
-                // Handle errors
-                Toast.makeText(DashboardActivity.this, "Failed to update role", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
     public void showOrder(View view) {
         Intent intent = new Intent(DashboardActivity.this, OrderActivity.class);
@@ -164,5 +136,35 @@ public class DashboardActivity extends AppCompatActivity {
         intent.putExtra("ownerName", ownerName);
         intent.putExtra("ownerShopName", ownerShopName);
         startActivity(intent);
+    }
+
+    public void ProgressOrder(View view) {
+
+        Intent intent = new Intent(DashboardActivity.this, ProgressActivity.class);
+
+
+        intent.putExtra("ownerName", ownerName);
+        intent.putExtra("ownerShopName", ownerShopName);
+        startActivity(intent);
+    }
+
+    public void NavigateToDeliver(View view) {
+
+        Intent intent = new Intent(DashboardActivity.this, DeliverActivity.class);
+
+
+        intent.putExtra("ownerName", ownerName);
+        intent.putExtra("ownerShopName", ownerShopName);
+        startActivity(intent);
+    }
+
+    public void NavigateToAddItem(View view) {
+        Intent intent = new Intent(DashboardActivity.this, AddItemActivity.class);
+
+
+        intent.putExtra("ownerName", ownerName);
+        intent.putExtra("ownerShopName", ownerShopName);
+        startActivity(intent);
+
     }
 }

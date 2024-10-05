@@ -1,42 +1,44 @@
+package com.example.gbfindadmin;
 
-package com.example.gbfindadmin.vendorMode;
+import static com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.gbfindadmin.Order;
-import com.example.gbfindadmin.R;
+import com.example.gbfindadmin.vendorMode.OrderAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.example.gbfindadmin.vendorMode.OrderAdapter;
 
 import java.util.ArrayList;
 
-public class OrderActivity extends AppCompatActivity {
+public class DeliverActivity extends AppCompatActivity {
 
-    private static final String TAG = "OrderActivity";
     private RecyclerView recyclerView;
     public OrderAdapter orderAdapter; // OrderAdapter reference
     private ArrayList<Order> orders;
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order);
+        setContentView(R.layout.activity_deliver);
 
         String ownerShop = getIntent().getStringExtra("ownerShopName");
         assert ownerShop != null;  // Initialize the RecyclerView
-        recyclerView = findViewById(R.id.activeRecycler);
+        recyclerView = findViewById(R.id.activeRecycler11111);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         orders = new ArrayList<>();
         orderAdapter = new OrderAdapter(orders,ownerShop); // Initialize OrderAdapter
@@ -51,7 +53,7 @@ public class OrderActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 orders.clear(); // Clear the list before adding new data
                 if (snapshot.exists()) {
-                    Toast.makeText(OrderActivity.this, "Orders found for this shop.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeliverActivity.this, "Orders found for this shop.", Toast.LENGTH_SHORT).show();
 
                     // Iterate through the children of the snapshot to get order details
                     for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
@@ -59,7 +61,7 @@ public class OrderActivity extends AppCompatActivity {
                         String status = orderSnapshot.child("status").getValue(String.class);
 
                         // Check if the status is "awaiting"
-                        if ("Awaiting".equals(status)) {
+                        if ("Deliver".equals(status)) {
                             Long totalPriceLong = orderSnapshot.child("totalPrice").getValue(Long.class);
                             String totalPrice = totalPriceLong != null ? totalPriceLong.toString() : null;
                             String transactionId = orderSnapshot.child("transcationId").getValue(String.class);
@@ -104,14 +106,15 @@ public class OrderActivity extends AppCompatActivity {
                     // Notify the adapter that the data has changed
                     orderAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(OrderActivity.this, "No orders found for this shop.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeliverActivity.this, "No orders found for this shop.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(OrderActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DeliverActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 }
