@@ -167,4 +167,10 @@ public class DashboardActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+finishAffinity();
+    }
 }
