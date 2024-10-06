@@ -56,6 +56,18 @@ public class DashboardActivity extends AppCompatActivity {
         checkUserAndFetchData();
 
 
+        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();  // Log the user out
+                // Redirect to LoginActivity
+                Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
 
 
 
